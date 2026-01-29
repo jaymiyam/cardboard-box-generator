@@ -8,6 +8,7 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  color: #212223;
 
   color-scheme: light dark;
 
@@ -22,15 +23,60 @@
   height: 100vh;
   max-height: calc(100vh - 2rem);
   display: flex;
+  gap: 1rem;
   margin: 1rem auto;
 }
 
 .canvas {
   height: 100%;
   aspect-ratio: 1;
-  border: 1px solid tomato;
+  border: 1px solid #ccc;
+  border-radius: 2rem;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 }
 
-.controls {
-  border: 1px solid lime;
+.sidebar,
+.info-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.info-box h1 {
+  font-size: 24px;
+}
+
+.info-box p {
+  font-size: 14px;
+  text-wrap: balance;
+}
+
+.btn-download {
+  cursor: pointer;
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid #ccc;
+  background-color: white;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all;
+}
+
+.btn-download:hover {
+  color: #2cc9ff;
+  border-color: #2cc9ff;
+}
+
+.lil-gui {
+  /* --background-color: white;
+  --text-color: #212223;
+  --title-background-color: #fafafa;
+  --title-text-color: #212223;
+  --widget-color: #fafafa; */
+  --font-size: 14px;
+  --input-font-size: 14px;
+  --padding: 10px;
+  --spacing: 8px;
 }

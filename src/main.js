@@ -15,7 +15,7 @@ const scene = new THREE.Scene();
 
 // camera
 const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
-camera.position.set(0, 100, 100);
+camera.position.set(50, 80, 150);
 scene.add(camera);
 
 // lighting
@@ -242,7 +242,7 @@ scene.add(box);
 
 /* ----- GUI settings and interactions ----- */
 
-const gui = new GUI();
+const gui = new GUI({ container: UIpanel });
 
 gui.add(boxParams, 'width', 20, 100, 1).onChange(rebuildBox);
 gui.add(boxParams, 'height', 5, 100, 1).onChange(rebuildBox);
