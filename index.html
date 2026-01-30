@@ -8,13 +8,11 @@
   </head>
   <body>
     <div id="app">
-      <canvas id="canvas" class="canvas"></canvas>
+      <div id="canvas-wrapper">
+        <canvas id="canvas" class="canvas"></canvas>
+      </div>
       <section class="sidebar">
-        <div id="controls" class="controls"></div>
         <div class="info-box">
-          <button type="button" id="btn-download" class="btn-download">
-            Export image
-          </button>
           <div>
             <h1>About this tool</h1>
             <p>
@@ -22,13 +20,16 @@
               real-world dimensions, materials, and viewing angles, then export
               clean images for mockups and layouts.
             </p>
-            <p>
-              Designed & created by
-              <a rel="noopener" href="https://jaymiyam.com/" target="_blank"
-                >Jaymi.</a
-              >
-            </p>
           </div>
+          <button type="button" id="btn-download" class="btn-download">
+            Export image
+          </button>
+          <p>
+            Designed & created by
+            <a rel="noopener" href="https://jaymiyam.com/" target="_blank"
+              >Jaymi.</a
+            >
+          </p>
         </div>
       </section>
     </div>

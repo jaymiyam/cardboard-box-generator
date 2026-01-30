@@ -19,16 +19,18 @@
 }
 
 #app {
-  width: 1000px;
-  height: 100vh;
-  max-height: calc(100vh - 2rem);
-  display: flex;
+  width: calc(100% - 2rem);
+  max-width: 1000px;
+  height: calc(100vh - 2rem);
+  display: grid;
+  grid-template-columns: 65% 35%;
   gap: 1rem;
   margin: 1rem auto;
 }
 
 .canvas {
-  height: 100%;
+  width: 100%;
+  max-height: 100%;
   aspect-ratio: 1;
   border: 1px solid #ccc;
   border-radius: 2rem;
@@ -69,14 +71,33 @@
   border-color: #2cc9ff;
 }
 
+#canvas-wrapper {
+  position: relative;
+}
+
 .lil-gui {
   /* --background-color: white;
   --text-color: #212223;
   --title-background-color: #fafafa;
   --title-text-color: #212223;
   --widget-color: #fafafa; */
-  --font-size: 14px;
-  --input-font-size: 14px;
-  --padding: 10px;
-  --spacing: 8px;
+  --font-size: 12px;
+  --input-font-size: 12px;
+  --padding: 8px;
+  --spacing: 4px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+@media (max-width: 800px) {
+  #app {
+    height: auto;
+    grid-template-columns: auto;
+  }
+
+  .sidebar {
+    flex-direction: row;
+    order: -1;
+  }
 }

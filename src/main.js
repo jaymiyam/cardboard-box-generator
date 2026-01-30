@@ -4,22 +4,20 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import GUI from 'lil-gui';
 
 const canvas = document.getElementById('canvas');
-const UIpanel = document.getElementById('controls');
 const downloadBtn = document.getElementById('btn-download');
 
 /* ----- THREE.JS scene set-up ----- */
 
 // scene
 const scene = new THREE.Scene();
-// scene.add(new THREE.AxesHelper(100));
 
 // camera
 const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
-camera.position.set(50, 80, 150);
+camera.position.set(60, 70, 150);
 scene.add(camera);
 
 // lighting
-const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
 scene.add(ambientLight);
 
 const lightHolder = new THREE.Group();
@@ -35,6 +33,7 @@ scene.add(lightHolder);
 // controls
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
+controls.enableZoom = false;
 
 // renderer
 const renderer = new THREE.WebGLRenderer({
@@ -128,12 +127,13 @@ const boxParams = {
   flapsAngle: 45,
   flapSizeOffset: 0.3,
   material: 'cardboard',
+  text: 'Hello world',
 };
 
 // box mesh generation
 let box;
 
-function createBox({ width, depth, height, flapSizeOffset, flapsAngle }) {
+function createBox({ width, depth, height, flapSizeOffset, flapsAngle, text }) {
   const box = new THREE.Group();
   const mat = boxMaterials[boxParams.material];
 
@@ -217,24 +217,46 @@ function createBox({ width, depth, height, flapSizeOffset, flapsAngle }) {
   box.userData.frontFlapPivot = frontFlapPivot;
   box.userData.backFlapPivot = backFlapPivot;
 
-  // create crease lines
-  const creaseMat = new THREE.LineBasicMaterial({
-    color: 0x7a5a2e,
-    transparent: true,
-    opacity: 0.6,
-  });
-
-  // box.traverse((child) => {
-  //   if (child.isMesh) {
-  //     const edges = new THREE.EdgesGeometry(child.geometry);
-  //     const lines = new THREE.LineSegments(edges, creaseMat);
-  //     lines.position.copy(child.position);
-  //     lines.rotation.copy(child.rotation);
-  //     box.add(lines);
-  //   }
-  // });
+  // create text plane
+  const textMesh = createTextPlane(boxParams);
+  box.add(textMesh);
+  box.userData.textMesh = textMesh;
 
   return box;
+}
+
+// update text function
+function createTextPlane({ width, height, depth, text }) {
+  // scale up to increase resolution of the canvas
+  const scale = 10;
+  const textCanvas = document.createElement('canvas');
+  textCanvas.width = width * scale;
+  textCanvas.height = height * scale;
+
+  const ctx = textCanvas.getContext('2d');
+  ctx.scale(scale, scale);
+
+  // draw the text on the canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#000';
+  ctx.font = '10px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(text, width / 2, height / 2);
+
+  // use the canvas to create a three.js texture
+  const canvasTexture = new THREE.CanvasTexture(textCanvas);
+  canvasTexture.colorSpace = THREE.SRGBColorSpace;
+
+  // use the canvas texture as material to create a plane
+  const textMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(width, height),
+    new THREE.MeshBasicMaterial({
+      map: canvasTexture,
+      transparent: true,
+    }),
+  );
+  textMesh.position.z = depth / 2;
+  return textMesh;
 }
 
 box = createBox(boxParams);
@@ -242,11 +264,11 @@ scene.add(box);
 
 /* ----- GUI settings and interactions ----- */
 
-const gui = new GUI({ container: UIpanel });
+const gui = new GUI({ container: document.getElementById('canvas-wrapper') });
 
 gui.add(boxParams, 'width', 20, 100, 1).onChange(rebuildBox);
-gui.add(boxParams, 'height', 5, 100, 1).onChange(rebuildBox);
-gui.add(boxParams, 'depth', 10, 100, 1).onChange(rebuildBox);
+gui.add(boxParams, 'height', 5, 80, 1).onChange(rebuildBox);
+gui.add(boxParams, 'depth', 10, 80, 1).onChange(rebuildBox);
 gui
   .add(boxParams, 'flapsAngle', 0, 89, 1)
   .name('flaps angle')
@@ -258,12 +280,21 @@ gui
     Recycled: 'recycled',
   })
   .onChange(rebuildBox);
+gui.add(boxParams, 'text').onFinishChange(rebuildTextPlane);
 
 // function to rebuild box upon change
 function rebuildBox() {
   if (box) scene.remove(box);
   box = createBox(boxParams);
   scene.add(box);
+}
+
+// function to rebuild text plane upon change
+function rebuildTextPlane() {
+  if (box.userData.textMesh) box.remove(box.userData.textMesh);
+  const textMesh = createTextPlane(boxParams);
+  box.add(textMesh);
+  box.userData.textMesh = textMesh;
 }
 
 // function to change flap angles
@@ -276,10 +307,21 @@ function changeFlapsAngle(degree) {
 downloadBtn.addEventListener('click', exportImage);
 
 function exportImage() {
-  // precaution to render to most updated scene before handling download
+  //temporarily update renderer to desired export size
+  const originalSize = renderer.getSize(new THREE.Vector2());
+  const originalPixelRatio = renderer.getPixelRatio();
+
+  renderer.setPixelRatio(1);
+  renderer.setSize(1500, 1500);
   renderer.render(scene, camera);
+
   // return a temporary URL containing the image data
   const imgURL = renderer.domElement.toDataURL('image/png');
+
+  // restore
+  renderer.setSize(originalSize.x, originalSize.y);
+  renderer.setPixelRatio(originalPixelRatio);
+  renderer.render(scene, camera);
 
   // create a temporary anchor tag to trigger download
   const downloadLink = document.createElement('a');
