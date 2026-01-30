@@ -50,9 +50,20 @@
   font-size: 24px;
 }
 
-.info-box p {
+.info-box p,
+ol {
   font-size: 14px;
   text-wrap: balance;
+}
+
+.info-box ol {
+  list-style-position: inside;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.info-box > div > * {
+  margin-bottom: 1rem;
 }
 
 .btn-download {
