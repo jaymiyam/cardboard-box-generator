@@ -6,16 +6,28 @@ const textureLoader = new THREE.TextureLoader();
 // TODO: update URL to import.meta.env.base_URL on build
 const textures = {
   cardboard: {
-    map: textureLoader.load('/textures/cardboard_Color.jpg'),
-    roughnessMap: textureLoader.load('/textures/cardboard_Roughness.jpg'),
+    map: textureLoader.load(
+      `${import.meta.env.BASE_URL}/textures/cardboard_Color.jpg`,
+    ),
+    roughnessMap: textureLoader.load(
+      `${import.meta.env.BASE_URL}/textures/cardboard_Roughness.jpg`,
+    ),
   },
   kraft: {
-    map: textureLoader.load('/textures/kraftPaper_Color.jpg'),
-    roughnessMap: textureLoader.load('/textures/kraftPaper_Roughness.jpg'),
+    map: textureLoader.load(
+      `${import.meta.env.BASE_URL}/textures/kraftPaper_Color.jpg`,
+    ),
+    roughnessMap: textureLoader.load(
+      `${import.meta.env.BASE_URL}/textures/kraftPaper_Roughness.jpg`,
+    ),
   },
   recycled: {
-    map: textureLoader.load('/textures/recycledPaper_Color.jpg'),
-    roughnessMap: textureLoader.load('/textures/recycledPaper_Roughness.jpg'),
+    map: textureLoader.load(
+      `${import.meta.env.BASE_URL}/textures/recycledPaper_Color.jpg`,
+    ),
+    roughnessMap: textureLoader.load(
+      `${import.meta.env.BASE_URL}/textures/recycledPaper_Roughness.jpg`,
+    ),
   },
 };
 
